@@ -107,9 +107,15 @@
 {
     if (self.isAnimating) return;
     
+	if (self.willOpenHandler)
+	{
+		self.willOpenHandler();
+	}
+	
     self.isOpen = YES;
     self.isAnimating = YES;
     
+	
     // Create views
     //
     self.containerView = ({
@@ -251,6 +257,11 @@
                              completion:^(BOOL finished)
              {
                  self.isAnimating = NO;
+				 
+				 if (self.didOpenHandler)
+				 {
+					 self.didOpenHandler();
+				 }
              }];
 
         } else {
@@ -267,6 +278,11 @@
                              completion:^(BOOL finished)
              {
                  self.isAnimating = NO;
+				 
+				 if (self.didOpenHandler)
+				 {
+					 self.didOpenHandler();
+				 }
              }];
 
         }
@@ -286,6 +302,11 @@
         completion:^(BOOL finished)
         {
             self.isAnimating = NO;
+			
+			if (self.didOpenHandler)
+            {
+                self.didOpenHandler();
+            }
         }];
     }
 }
@@ -317,6 +338,11 @@
     CGFloat navigationBarOffset = self.appearsBehindNavigationBar && self.navigationBar ? 64 : 0;
     
     void (^closeMenu)(void) = ^{
+		if (self.willCloseHandler)
+		{
+			self.willCloseHandler();
+		}
+		
         [UIView animateWithDuration:self.animationDuration
                               delay:0.0
                             options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
@@ -343,9 +369,9 @@
                 completion();
             }
             
-            if (self.closeCompletionHandler)
+            if (self.didCloseHandler)
             {
-                self.closeCompletionHandler();
+                self.didCloseHandler();
             }
         }];
         
