@@ -373,19 +373,19 @@
                 completion();
             }
             
-            if (self.didCloseHandler)
+            if (self.closeCompletionHandler)
             {
-                self.didCloseHandler();
+                self.closeCompletionHandler();
             }
         }];
         
     };
-
-	if (self.willCloseHandler)
+    
+    if (self.closePreparationBlock) {
 	{
-		self.willCloseHandler();
-	}
-
+        self.closePreparationBlock();
+    }
+    
     if (self.bounce) {
         [UIView animateWithDuration:self.bounceAnimationDuration animations:^{
             CGRect frame = self.menuView.frame;
