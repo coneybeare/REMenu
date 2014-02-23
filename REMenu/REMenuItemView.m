@@ -207,18 +207,22 @@
         return;
     
     if (!self.menu.closeOnSelection) {
+		if (self.item.preCloseAction)
+			self.item.preCloseAction(self.item);
         if (self.item.action)
             self.item.action(self.item);
     } else {
         if (self.item.action) {
             if (self.menu.waitUntilAnimationIsComplete) {
+				self.item.preCloseAction(self.item);
                 __typeof (&*self) __weak weakSelf = self;
-                [self.menu closeWithCompletion:^{
+				[self.menu closeWithCompletion:^{
                     weakSelf.item.action(weakSelf.item);
                 }];
             } else {
-                [self.menu close];
-                self.item.action(self.item);
+				self.item.preCloseAction(self.item);
+				[self.menu close];
+				self.item.action(self.item);
             }
         }
     }

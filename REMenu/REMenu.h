@@ -92,6 +92,7 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
 @property (assign, readwrite, nonatomic) NSTextAlignment subtitleTextAlignment;
 @property (assign, readwrite, nonatomic) NSTimeInterval animationDuration;
 @property (assign, readwrite, nonatomic) NSTimeInterval bounceAnimationDuration;
+@property (assign, readwrite, nonatomic) NSTimeInterval animationDelay;
 @property (assign, readwrite, nonatomic) REMenuImageAlignment imageAlignment;
 @property (assign, readwrite, nonatomic) BOOL appearsBehindNavigationBar;
 @property (assign, readwrite, nonatomic) BOOL bounce;
@@ -103,6 +104,7 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
 - (id)initWithItems:(NSArray *)items;
 - (void)showFromRect:(CGRect)rect inView:(UIView *)view;
 - (void)showInView:(UIView *)view;
+- (void)showFromNavigationController:(UINavigationController *)navigationController withWidth:(CGFloat)width;
 - (void)showFromNavigationController:(UINavigationController *)navigationController;
 - (void)setNeedsLayout;
 - (void)closeWithCompletion:(void (^)(void))completion;
