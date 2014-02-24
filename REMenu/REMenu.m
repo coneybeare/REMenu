@@ -57,25 +57,25 @@
         self.itemHeight = 48.0;
         self.separatorHeight = 2.0;
         self.waitUntilAnimationIsComplete = YES;
-        
+
         self.textOffset = CGSizeMake(0, 0);
         self.subtitleTextOffset = CGSizeMake(0, 0);
         self.font = [UIFont boldSystemFontOfSize:21.0];
         self.subtitleFont = [UIFont systemFontOfSize:14.0];
-        
+
         self.backgroundColor = [UIColor colorWithRed:53/255.0 green:53/255.0 blue:52/255.0 alpha:1.0];
         self.separatorColor = [UIColor colorWithPatternImage:self.separatorImage];
         self.textColor = [UIColor colorWithRed:128/255.0 green:126/255.0 blue:124/255.0 alpha:1.0];
         self.textShadowColor = [UIColor blackColor];
         self.textShadowOffset = CGSizeMake(0, -1.0);
         self.textAlignment = NSTextAlignmentCenter;
-        
+
         self.highlightedBackgroundColor = [UIColor colorWithRed:28/255.0 green:28/255.0 blue:27/255.0 alpha:1.0];
         self.highlightedSeparatorColor = [UIColor colorWithRed:28/255.0 green:28/255.0 blue:27/255.0 alpha:1.0];
         self.highlightedTextColor = [UIColor colorWithRed:128/255.0 green:126/255.0 blue:124/255.0 alpha:1.0];
         self.highlightedTextShadowColor = [UIColor blackColor];
         self.highlightedTextShadowOffset = CGSizeMake(0, -1.0);
-        
+
         self.subtitleTextColor = [UIColor colorWithWhite:0.425 alpha:1.000];
         self.subtitleTextShadowColor = [UIColor blackColor];
         self.subtitleTextShadowOffset = CGSizeMake(0, -1.0);
@@ -83,14 +83,14 @@
         self.subtitleHighlightedTextShadowColor = [UIColor blackColor];
         self.subtitleHighlightedTextShadowOffset = CGSizeMake(0, -1.0);
         self.subtitleTextAlignment = NSTextAlignmentCenter;
-        
+
         self.borderWidth = 1.0;
         self.borderColor =  [UIColor colorWithRed:28/255.0 green:28/255.0 blue:27/255.0 alpha:1.0];
         self.animationDuration = 0.3;
         self.bounce = YES;
         self.bounceAnimationDuration = 0.2;
         self.animationDelay = 0.0;
-		
+
         self.appearsBehindNavigationBar = REUIKitIsFlatMode() ? YES : NO;
     }
     return self;
@@ -107,29 +107,29 @@
 - (void)showFromRect:(CGRect)rect inView:(UIView *)view
 {
     if (self.isAnimating) return;
-    
+
 	if (self.willOpenHandler)
 	{
 		self.willOpenHandler();
 	}
-	
+
     self.isOpen = YES;
     self.isAnimating = YES;
-	
+
     // Create views
     //
     self.containerView = ({
         REMenuContainerView *view = [[REMenuContainerView alloc] init];
         view.clipsToBounds = YES;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        
+
         if (self.backgroundView) {
             self.backgroundView.alpha = 0;
             [view addSubview:self.backgroundView];
         }
         view;
     });
-    
+
     self.menuView = ({
         UIView *view = [[UIView alloc] init];
         if (!self.liveBlur || !REUIKitIsFlatMode()) {
@@ -144,7 +144,7 @@
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         view;
     });
-    
+
     if (REUIKitIsFlatMode()) {
         self.toolbar = ({
             UIToolbar *toolbar = [[UIToolbar alloc] init];
@@ -155,7 +155,7 @@
             toolbar;
         });
     }
-    
+
     self.menuWrapperView = ({
         UIView *view = [[UIView alloc] init];
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -169,7 +169,7 @@
         }
         view;
     });
-    
+
     self.backgroundButton = ({
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -178,18 +178,18 @@
         [button addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
         button;
     });
-    
+
     CGFloat navigationBarOffset = self.appearsBehindNavigationBar && self.navigationBar ? 64 : 0;
-    
+
     // Append new item views to REMenuView
     //
     for (REMenuItem *item in self.items) {
         NSInteger index = [self.items indexOfObject:item];
-        
+
         CGFloat itemHeight = self.itemHeight;
         if (index == self.items.count - 1)
             itemHeight += self.cornerRadius;
-        
+
 		UIView *separatorView = nil;
 		if (index != 0) {
 			separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
@@ -200,7 +200,7 @@
 			separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 			[self.menuView addSubview:separatorView];
 		}
-        
+
         REMenuItemView *itemView = [[REMenuItemView alloc] initWithFrame:CGRectMake(0,
                                                                                     index * self.itemHeight + (index + 1.0) * self.separatorHeight + 40.0 + navigationBarOffset,
                                                                                     rect.size.width,
@@ -217,7 +217,7 @@
         }
         [self.menuView addSubview:itemView];
     }
-    
+
     // Set up frames
     //
     self.menuWrapperView.frame = CGRectMake(0, -self.combinedHeight - navigationBarOffset, rect.size.width, self.combinedHeight + navigationBarOffset);
@@ -227,7 +227,7 @@
     }
     self.containerView.frame = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
     self.backgroundButton.frame = self.containerView.bounds;
-    
+
     // Add subviews
     //
     if (REUIKitIsFlatMode() && self.liveBlur) {
@@ -237,7 +237,7 @@
     [self.containerView addSubview:self.backgroundButton];
     [self.containerView addSubview:self.menuWrapperView];
     [view addSubview:self.containerView];
-    
+
     // Animate appearance
     //
     if (self.bounce)
@@ -260,7 +260,7 @@
                              completion:^(BOOL finished)
              {
                  self.isAnimating = NO;
-				 
+
 				 if (self.didOpenHandler)
 				 {
 					 self.didOpenHandler();
@@ -281,7 +281,7 @@
                              completion:^(BOOL finished)
              {
                  self.isAnimating = NO;
-				 
+
 				 if (self.didOpenHandler)
 				 {
 					 self.didOpenHandler();
@@ -305,7 +305,7 @@
         completion:^(BOOL finished)
         {
             self.isAnimating = NO;
-			
+
 			if (self.didOpenHandler)
             {
                 self.didOpenHandler();
@@ -322,7 +322,7 @@
 - (void)showFromNavigationController:(UINavigationController *)navigationController withWidth:(CGFloat)width
 {
 	if (self.isAnimating) return;
-    
+
     self.navigationBar = navigationController.navigationBar;
     [self showFromRect:CGRectMake(navigationController.navigationBar.bounds.origin.x + floor((navigationController.navigationBar.bounds.size.width - width) / 2.0), 0, width, navigationController.view.frame.size.height) inView:navigationController.view];
     self.containerView.appearsBehindNavigationBar = self.appearsBehindNavigationBar;
@@ -340,13 +340,13 @@
 - (void)closeWithCompletion:(void (^)(void))completion
 {
     if (self.isAnimating) return;
-    
+
     self.isAnimating = YES;
-    
+
     CGFloat navigationBarOffset = self.appearsBehindNavigationBar && self.navigationBar ? 64 : 0;
-    
+
     void (^closeMenu)(void) = ^{
-				
+
         [UIView animateWithDuration:self.animationDuration
                               delay:self.animationDelay
                             options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
@@ -361,31 +361,30 @@
         {
             self.isOpen = NO;
             self.isAnimating = NO;
-            
+
             [self.menuView removeFromSuperview];
             [self.menuWrapperView removeFromSuperview];
             [self.backgroundButton removeFromSuperview];
             [self.backgroundView removeFromSuperview];
             [self.containerView removeFromSuperview];
-            
+
             if (completion)
             {
                 completion();
             }
-            
+
             if (self.closeCompletionHandler)
             {
                 self.closeCompletionHandler();
             }
         }];
-        
+
     };
-    
+
     if (self.closePreparationBlock) {
-	{
         self.closePreparationBlock();
     }
-    
+
     if (self.bounce) {
         [UIView animateWithDuration:self.bounceAnimationDuration animations:^{
             CGRect frame = self.menuView.frame;
@@ -431,7 +430,7 @@
     UIGraphicsPopContext();
     UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
+
     return [UIImage imageWithCGImage:outputImage.CGImage scale:2.0 orientation:UIImageOrientationUp];
 }
 
