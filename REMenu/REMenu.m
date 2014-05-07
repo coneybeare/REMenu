@@ -51,7 +51,8 @@
 
 - (id)init
 {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         self.imageAlignment = REMenuImageAlignmentLeft;
         self.closeOnSelection = YES;
         self.itemHeight = 48.0;
@@ -91,26 +92,28 @@
         self.bounceAnimationDuration = 0.2;
         self.animationDelay = 0.0;
 
-        self.appearsBehindNavigationBar = REUIKitIsFlatMode() ? YES : NO;
+        _appearsBehindNavigationBar = REUIKitIsFlatMode() ? YES : NO;
     }
     return self;
 }
 
 - (id)initWithItems:(NSArray *)items
 {
-    if ((self = [self init])) {
-        self.items = items;
+    self = [self init];
+    if (self) {
+        _items = items;
     }
     return self;
 }
 
 - (void)showFromRect:(CGRect)rect inView:(UIView *)view
 {
-    if (self.isAnimating) return;
+    if (self.isAnimating) {
 
 	if (self.willOpenHandler)
 	{
 		self.willOpenHandler();
+        return;
 	}
 
     self.isOpen = YES;
@@ -152,6 +155,10 @@
             if ([toolbar respondsToSelector:@selector(setBarTintColor:)])
                 [toolbar performSelector:@selector(setBarTintColor:) withObject:self.liveBlurTintColor];
             toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            toolbar.layer.cornerRadius = self.cornerRadius;
+            toolbar.layer.borderColor = self.borderColor.CGColor;
+            toolbar.layer.borderWidth = self.borderWidth;
+            toolbar.layer.masksToBounds = YES;
             toolbar;
         });
     }
@@ -240,7 +247,7 @@
 
     // Animate appearance
     //
-    if (self.bounce)
+    if (self.bounce) {
     {
         self.isAnimating = YES;
 
@@ -250,14 +257,14 @@
                  usingSpringWithDamping:0.6
                   initialSpringVelocity:1.5
                                 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
-                             animations:^
+                             animations:^{
              {
-                 self.backgroundView.alpha = 1.0;
+                 self.backgroundView.alpha = self.backgroundAlpha;
                  CGRect frame = self.menuView.frame;
                  frame.origin.y = -40.0 - self.separatorHeight;
                  self.menuWrapperView.frame = frame;
              }
-                             completion:^(BOOL finished)
+             } completion:^(BOOL finished) {
              {
                  self.isAnimating = NO;
 
@@ -271,14 +278,14 @@
             [UIView animateWithDuration:self.animationDuration
                                   delay:self.animationDelay
                                 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
-                             animations:^
+                             animations:^{
              {
-                 self.backgroundView.alpha = 1.0;
+                 self.backgroundView.alpha = self.backgroundAlpha;
                  CGRect frame = self.menuView.frame;
                  frame.origin.y = -40.0 - self.separatorHeight;
                  self.menuWrapperView.frame = frame;
              }
-                             completion:^(BOOL finished)
+             } completion:^(BOOL finished) {
              {
                  self.isAnimating = NO;
 
@@ -289,20 +296,20 @@
              }];
 
         }
-    }
+    } else {
     else
     {
         [UIView animateWithDuration:self.animationDuration
                               delay:self.animationDelay
                             options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
-                         animations:^
+                         animations:^{
         {
-            self.backgroundView.alpha = 1.0;
+            self.backgroundView.alpha = self.backgroundAlpha;
             CGRect frame = self.menuView.frame;
             frame.origin.y = -40.0 - self.separatorHeight;
             self.menuWrapperView.frame = frame;
         }
-        completion:^(BOOL finished)
+        } completion:^(BOOL finished) {
         {
             self.isAnimating = NO;
 
@@ -350,14 +357,14 @@
         [UIView animateWithDuration:self.animationDuration
                               delay:self.animationDelay
                             options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
-                         animations:^
+                         animations:^ {
         {
             CGRect frame = self.menuView.frame;
             frame.origin.y = - self.combinedHeight - navigationBarOffset;
             self.menuWrapperView.frame = frame;
             self.backgroundView.alpha = 0;
         }
-        completion:^(BOOL finished)
+        } completion:^(BOOL finished)
         {
             self.isOpen = NO;
             self.isAnimating = NO;
@@ -368,13 +375,13 @@
             [self.backgroundView removeFromSuperview];
             [self.containerView removeFromSuperview];
 
-            if (completion)
-            {
+            
+            if (completion) {
                 completion();
             }
 
-            if (self.closeCompletionHandler)
-            {
+            
+            if (self.closeCompletionHandler) {
                 self.closeCompletionHandler();
             }
         }];
@@ -405,7 +412,7 @@
 
 - (CGFloat)combinedHeight
 {
-    return self.items.count * self.itemHeight + self.items.count  * self.separatorHeight + 40.0 + self.cornerRadius;
+    return self.items.count * self.itemHeight + self.items.count * self.separatorHeight + 40.0 + self.cornerRadius;
 }
 
 - (void)setNeedsLayout

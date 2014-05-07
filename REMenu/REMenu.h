@@ -64,6 +64,7 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
 @property (assign, readwrite, nonatomic) CGFloat shadowOpacity;
 @property (assign, readwrite, nonatomic) CGFloat shadowRadius;
 @property (assign, readwrite, nonatomic) CGFloat itemHeight;
+@property (assign, readwrite, nonatomic) CGFloat backgroundAlpha;
 @property (strong, readwrite, nonatomic) UIColor *backgroundColor;
 @property (strong, readwrite, nonatomic) UIColor *separatorColor;
 @property (assign, readwrite, nonatomic) CGFloat separatorHeight;
@@ -73,10 +74,14 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
 @property (assign, readwrite, nonatomic) CGSize imageOffset;
 @property (assign, readwrite, nonatomic) CGSize textOffset;
 @property (assign, readwrite, nonatomic) CGSize textShadowOffset;
+@property (assign, readwrite, nonatomic) REMenuImageAlignment imageAlignment;
+@property (strong, readwrite, nonatomic) UIColor *imageTintColor;
+@property (assign, readwrite, nonatomic) CGSize imageOffset;
 @property (strong, readwrite, nonatomic) UIColor *highlightedBackgroundColor;
 @property (strong, readwrite, nonatomic) UIColor *highlightedSeparatorColor;
 @property (strong, readwrite, nonatomic) UIColor *highlightedTextColor;
 @property (strong, readwrite, nonatomic) UIColor *highlightedTextShadowColor;
+@property (strong, readwrite, nonatomic) UIColor *highlightedImageTintColor;
 @property (assign, readwrite, nonatomic) CGSize highlightedTextShadowOffset;
 @property (assign, readwrite, nonatomic) CGFloat borderWidth;
 @property (strong, readwrite, nonatomic) UIColor *borderColor;
