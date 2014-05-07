@@ -50,6 +50,8 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
 @property (assign, readonly, nonatomic) BOOL isOpen;
 @property (assign, readonly, nonatomic) BOOL isAnimating;
 @property (assign, readwrite, nonatomic) BOOL waitUntilAnimationIsComplete;
+@property (copy, readwrite, nonatomic) void (^willOpenHandler)(void);
+@property (copy, readwrite, nonatomic) void (^didOpenHandler)(void);
 @property (copy, readwrite, nonatomic) void (^closeCompletionHandler)(void);
 @property (copy, readwrite, nonatomic) void (^closePreparationBlock)(void);
 @property (assign, readwrite, nonatomic) BOOL closeOnSelection;
@@ -94,6 +96,7 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
 @property (assign, readwrite, nonatomic) NSTextAlignment subtitleTextAlignment;
 @property (assign, readwrite, nonatomic) NSTimeInterval animationDuration;
 @property (assign, readwrite, nonatomic) NSTimeInterval bounceAnimationDuration;
+@property (assign, readwrite, nonatomic) NSTimeInterval animationDelay;
 @property (assign, readwrite, nonatomic) BOOL appearsBehindNavigationBar;
 @property (assign, readwrite, nonatomic) BOOL bounce;
 @property (assign, readwrite, nonatomic) BOOL liveBlur; // Available only in iOS 7
@@ -105,6 +108,7 @@ typedef NS_ENUM(NSInteger, REMenuLiveBackgroundStyle) {
 - (void)showFromRect:(CGRect)rect inView:(UIView *)view;
 - (void)showInView:(UIView *)view;
 - (void)showFromNavigationController:(UINavigationController *)navigationController;
+- (void)showFromNavigationController:(UINavigationController *)navigationController withWidth:(CGFloat)width;
 - (void)setNeedsLayout;
 - (void)closeWithCompletion:(void (^)(void))completion;
 - (void)close;

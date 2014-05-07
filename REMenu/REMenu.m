@@ -91,6 +91,7 @@
         _animationDuration = 0.3;
         _bounce = YES;
         _bounceAnimationDuration = 0.2;
+        _animationDelay = 0.0;
 
         _appearsBehindNavigationBar = REUIKitIsFlatMode() ? YES : NO;
     }
@@ -110,6 +111,11 @@
 {
     if (self.isAnimating) {
         return;
+    }
+
+    if (self.willOpenHandler)
+    {
+        self.willOpenHandler();
     }
 
     self.isOpen = YES;
@@ -193,13 +199,16 @@
         if (index == self.items.count - 1)
             itemHeight += self.cornerRadius;
 
-        UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
-                                                                         index * self.itemHeight + index * self.separatorHeight + 40.0 + navigationBarOffset,
-                                                                         rect.size.width,
-                                                                         self.separatorHeight)];
-        separatorView.backgroundColor = self.separatorColor;
-        separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [self.menuView addSubview:separatorView];
+        UIView *separatorView = nil;
+        if (index != 0) {
+            separatorView = [[UIView alloc] initWithFrame:CGRectMake(0,
+                                                                     index * self.itemHeight + index * self.separatorHeight + 40.0 + navigationBarOffset,
+                                                                     rect.size.width,
+                                                                     self.separatorHeight)];
+            separatorView.backgroundColor = self.separatorColor;
+            separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            [self.menuView addSubview:separatorView];
+        }
 
         REMenuItemView *itemView = [[REMenuItemView alloc] initWithFrame:CGRectMake(0,
                                                                                     index * self.itemHeight + (index + 1.0) * self.separatorHeight + 40.0 + navigationBarOffset,
@@ -244,9 +253,9 @@
         self.isAnimating = YES;
         if ([UIView respondsToSelector:@selector(animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:)]) {
             [UIView animateWithDuration:self.animationDuration+self.bounceAnimationDuration
-                                  delay:0.0
+                                  delay:self.animationDelay
                  usingSpringWithDamping:0.6
-                  initialSpringVelocity:4.0
+                  initialSpringVelocity:1.5
                                 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
                              animations:^{
                  self.backgroundView.alpha = self.backgroundAlpha;
@@ -255,10 +264,14 @@
                  self.menuWrapperView.frame = frame;
              } completion:^(BOOL finished) {
                  self.isAnimating = NO;
+                 if (self.didOpenHandler)
+                 {
+                     self.didOpenHandler();
+                 }
              }];
         } else {
             [UIView animateWithDuration:self.animationDuration
-                                  delay:0.0
+                                  delay:self.animationDelay
                                 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
                              animations:^{
                  self.backgroundView.alpha = self.backgroundAlpha;
@@ -267,12 +280,16 @@
                  self.menuWrapperView.frame = frame;
              } completion:^(BOOL finished) {
                  self.isAnimating = NO;
+                 if (self.didOpenHandler)
+                 {
+                     self.didOpenHandler();
+                 }
              }];
 
         }
     } else {
         [UIView animateWithDuration:self.animationDuration
-                              delay:0.0
+                              delay:self.animationDelay
                             options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
                          animations:^{
             self.backgroundView.alpha = self.backgroundAlpha;
@@ -281,6 +298,10 @@
             self.menuWrapperView.frame = frame;
         } completion:^(BOOL finished) {
             self.isAnimating = NO;
+            if (self.didOpenHandler)
+            {
+                self.didOpenHandler();
+            }
         }];
     }
 }
@@ -290,19 +311,25 @@
     [self showFromRect:view.bounds inView:view];
 }
 
-- (void)showFromNavigationController:(UINavigationController *)navigationController
+- (void)showFromNavigationController:(UINavigationController *)navigationController withWidth:(CGFloat)width
 {
     if (self.isAnimating) {
         return;
     }
 
     self.navigationBar = navigationController.navigationBar;
-    [self showFromRect:CGRectMake(0, 0, navigationController.navigationBar.frame.size.width, navigationController.view.frame.size.height) inView:navigationController.view];
+    [self showFromRect:CGRectMake(navigationController.navigationBar.bounds.origin.x + floor((navigationController.navigationBar.bounds.size.width - width) / 2.0), 0, width, navigationController.view.frame.size.height) inView:navigationController.view];
+
     self.containerView.appearsBehindNavigationBar = self.appearsBehindNavigationBar;
     self.containerView.navigationBar = navigationController.navigationBar;
     if (self.appearsBehindNavigationBar) {
         [navigationController.view bringSubviewToFront:navigationController.navigationBar];
     }
+}
+
+- (void)showFromNavigationController:(UINavigationController *)navigationController
+{
+    [self showFromNavigationController:navigationController withWidth:navigationController.navigationBar.frame.size.width];
 }
 
 - (void)closeWithCompletion:(void (^)(void))completion
@@ -315,7 +342,7 @@
 
     void (^closeMenu)(void) = ^{
         [UIView animateWithDuration:self.animationDuration
-                              delay:0.0
+                              delay:self.animationDelay
                             options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
                          animations:^ {
             CGRect frame = self.menuView.frame;

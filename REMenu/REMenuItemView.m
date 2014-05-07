@@ -43,7 +43,7 @@
         self.isAccessibilityElement = YES;
         self.accessibilityTraits = UIAccessibilityTraitButton;
         self.accessibilityHint = NSLocalizedString(@"Double tap to choose", @"Double tap to choose");
-        
+
         _backgroundView = ({
             UIView *view = [[UIView alloc] initWithFrame:self.bounds];
             view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -52,7 +52,7 @@
             view;
         });
         [self addSubview:_backgroundView];
-        
+
         CGRect titleFrame;
         if (hasSubtitle) {
             // Dividing lines at 1/1.725 (vs 1/2.000) results in labels about 28-top 20-bottom or 60/40 title/subtitle (for a 48 frame height)
@@ -85,7 +85,7 @@
         });
 
         _imageView = [[UIImageView alloc] initWithFrame:CGRectNull];
-        
+
         _badgeLabel = ({
             UILabel *label = [[UILabel alloc] init];
             label.backgroundColor = [UIColor colorWithWhite:0.559 alpha:1.000];
@@ -99,7 +99,7 @@
             label.layer.masksToBounds = YES;
             label;
         });
-        
+
         [self addSubview:_titleLabel];
         [self addSubview:_imageView];
         [self addSubview:_badgeLabel];
@@ -110,9 +110,9 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     self.imageView.image = self.item.image;
-    
+
     // Adjust frames
     //
     CGFloat verticalOffset = floor((self.frame.size.height - self.item.image.size.height) / 2.0);
@@ -123,7 +123,7 @@
     if ([self.imageView respondsToSelector:@selector(setTintColor:)]) {
         self.imageView.tintColor = self.menu.imageTintColor;
     }
-    
+
     // Set up badge
     //
     self.badgeLabel.hidden = !self.item.badge;
@@ -137,17 +137,17 @@
         CGFloat x = self.menu.imageAlignment == REMenuImageAlignmentLeft ? CGRectGetMaxX(self.imageView.frame) - 2.0 :
         CGRectGetMinX(self.imageView.frame) - rect.size.height - 4.0;
         self.badgeLabel.frame = CGRectMake(x, self.imageView.frame.origin.y - 2.0, rect.size.width + 6.0, rect.size.height + 2.0);
-       
+
         if (self.menu.badgeLabelConfigurationBlock)
             self.menu.badgeLabelConfigurationBlock(self.badgeLabel, self.item);
     }
-    
+
     // Accessibility
     //
     self.accessibilityLabel = self.item.title;
     if (self.subtitleLabel.text)
         self.accessibilityLabel = [NSString stringWithFormat:@"%@, %@", self.item.title, self.item.subtitle];
-    
+
     // Adjust styles
     //
     self.backgroundView.backgroundColor = self.item.backgroundColor == nil ? [UIColor clearColor] : self.item.backgroundColor;
@@ -164,7 +164,7 @@
     self.subtitleLabel.shadowColor = self.item.subtitleTextShadowColor == nil ? self.menu.subtitleTextShadowColor : self.item.subtitleTextShadowColor;
     self.subtitleLabel.shadowOffset = self.item.subtitleTextShadowOffset.width == 0 && self.item.subtitleTextShadowOffset.height == 0 ? self.menu.subtitleTextShadowOffset : self.item.subtitleTextShadowOffset;
     self.subtitleLabel.textAlignment = (NSInteger)self.item.subtitleTextAlignment == -1 ? self.menu.subtitleTextAlignment : self.item.subtitleTextAlignment;
-    
+
     self.item.customView.frame = CGRectMake(0, 0, self.titleLabel.frame.size.width, self.frame.size.height);
 }
 
@@ -218,24 +218,24 @@
     CGPoint endedPoint = [touches.anyObject locationInView:self];
     if (endedPoint.y < 0 || endedPoint.y > CGRectGetHeight(self.bounds))
         return;
-    
+
     if (!self.menu.closeOnSelection) {
-		if (self.item.preCloseAction)
-			self.item.preCloseAction(self.item);
+        if (self.item.preCloseAction)
+			      self.item.preCloseAction(self.item);
         if (self.item.action)
             self.item.action(self.item);
     } else {
         if (self.item.action) {
             if (self.menu.waitUntilAnimationIsComplete) {
-				self.item.preCloseAction(self.item);
+				        self.item.preCloseAction(self.item);
                 __typeof (&*self) __weak weakSelf = self;
-				[self.menu closeWithCompletion:^{
+				        [self.menu closeWithCompletion:^{
                     weakSelf.item.action(weakSelf.item);
                 }];
             } else {
-				self.item.preCloseAction(self.item);
-				[self.menu close];
-				self.item.action(self.item);
+				        self.item.preCloseAction(self.item);
+				        [self.menu close];
+				        self.item.action(self.item);
             }
         }
     }

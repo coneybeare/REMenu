@@ -55,6 +55,7 @@
 @property (copy, readwrite, nonatomic) NSString *badge;
 @property (strong, readwrite, nonatomic) UIImage *image;
 @property (strong, readwrite, nonatomic) UIImage *higlightedImage;
+@property (copy, readwrite, nonatomic) void (^preCloseAction)(REMenuItem *item);
 @property (copy, readwrite, nonatomic) void (^action)(REMenuItem *item);
 @property (assign, readwrite, nonatomic) NSInteger tag;
 @property (strong, readwrite, nonatomic) UIView *customView;
