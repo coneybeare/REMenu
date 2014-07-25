@@ -202,14 +202,14 @@
 
         UIView *separatorView = nil;
         if (index != 0) {
-        UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(self.separatorOffset.width,
-                                                                         index * self.itemHeight + index * self.separatorHeight + 40.0 + navigationBarOffset + self.separatorOffset.height,
-                                                                         rect.size.width - self.separatorOffset.width,
-                                                                         self.separatorHeight)];
-        separatorView.backgroundColor = self.separatorColor;
-        separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        [self.menuView addSubview:separatorView];
-        
+            UIView *separatorView = [[UIView alloc] initWithFrame:CGRectMake(self.separatorOffset.width,
+                                                                             index * self.itemHeight + index * self.separatorHeight + 40.0 + navigationBarOffset + self.separatorOffset.height,
+                                                                             rect.size.width - self.separatorOffset.width,
+                                                                             self.separatorHeight)];
+            separatorView.backgroundColor = self.separatorColor;
+            separatorView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            [self.menuView addSubview:separatorView];
+        }
 
         REMenuItemView *itemView = [[REMenuItemView alloc] initWithFrame:CGRectMake(0,
                                                                                     index * self.itemHeight + (index + 1.0) * self.separatorHeight + 40.0 + navigationBarOffset,
