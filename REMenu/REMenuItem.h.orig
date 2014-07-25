@@ -54,8 +54,12 @@
 @property (copy, readwrite, nonatomic) NSString *subtitle;
 @property (copy, readwrite, nonatomic) NSString *badge;
 @property (strong, readwrite, nonatomic) UIImage *image;
-@property (strong, readwrite, nonatomic) UIImage *highlightedImage;
+<<<<<<< HEAD
+@property (strong, readwrite, nonatomic) UIImage *higlightedImage;
 @property (copy, readwrite, nonatomic) void (^preCloseAction)(REMenuItem *item);
+=======
+@property (strong, readwrite, nonatomic) UIImage *highlightedImage;
+>>>>>>> upstream/master
 @property (copy, readwrite, nonatomic) void (^action)(REMenuItem *item);
 @property (assign, readwrite, nonatomic) NSInteger tag;
 @property (strong, readwrite, nonatomic) UIView *customView;
